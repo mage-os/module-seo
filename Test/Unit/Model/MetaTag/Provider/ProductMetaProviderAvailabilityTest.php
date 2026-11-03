@@ -6,6 +6,7 @@ namespace MageOS\Seo\Test\Unit\Model\MetaTag\Provider;
 
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Catalog\Model\Product;
+use Magento\Framework\View\ConfigInterface as ViewConfig;
 use MageOS\Seo\Api\SchemaPriceInterface;
 use MageOS\Seo\Model\Catalog\CurrentEntity;
 use MageOS\Seo\Model\Config;
@@ -101,7 +102,8 @@ class ProductMetaProviderAvailabilityTest extends TestCase
             $imageHelper,
             $config,
             $finalPrice,
-            $resolver
+            $resolver,
+            $this->createStub(ViewConfig::class)
         );
     }
 

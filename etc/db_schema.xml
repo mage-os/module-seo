@@ -191,6 +191,21 @@
     </table>
 
     <!--
+        A CMS page's Open Graph title, description and image.
+        They are page content, like the meta fields, so they are cms_page columns, not a
+        mageos_seo_cms_page_config row. The page form, REST and imports save them with the page.
+        Products and categories have them as EAV attributes (Setup\Patch\Data\AddOpenGraphAttributes).
+        Open Graph modules commonly use these names and og_title's length, so existing values are kept.
+        og_image is stored as the Media Gallery posts it, a path from the web root such as
+        /media/wysiwyg/team.jpg, like core's category image (Model\Cms\OgImagePath).
+    -->
+    <table name="cms_page" resource="default">
+        <column xsi:type="varchar" name="og_title" nullable="true" length="255" comment="Open Graph title"/>
+        <column xsi:type="text" name="og_description" nullable="true" comment="Open Graph description"/>
+        <column xsi:type="text" name="og_image" nullable="true" comment="Open Graph image (media path)"/>
+    </table>
+
+    <!--
         The FAQ table, mageos_faq, is MageOS_Faq's. db_schema_whitelist.json keeps its pre-rename
         name, mageos_seo_faq, which this module created, so setup:upgrade drops that table.
     -->

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+    The product og:image size when Publish Images at the Open Graph Size is on
+    (Model\MetaTag\Provider\ProductMetaProvider). Category and CMS page images are not resized.
+    1200 × 630 is the size of large link previews on Facebook, LinkedIn and X.
+    The image keeps its proportions and is framed on a white canvas of exactly that size.
+    A theme can change it in its own view.xml, under the same id.
+-->
+<view xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/view.xsd">
+    <media>
+        <images module="Magento_Catalog">
+            <image id="mageos_seo_og_image" type="image">
+                <width>1200</width>
+                <height>630</height>
+                <constrain>true</constrain>
+                <aspect_ratio>true</aspect_ratio>
+                <frame>true</frame>
+                <transparency>false</transparency>
+                <background>[255, 255, 255]</background>
+            </image>
+        </images>
+    </media>
+</view>

@@ -7,11 +7,14 @@ namespace MageOS\Seo\Test\Unit\Model\MetaTag\Provider;
 use Magento\Cms\Model\Page;
 use Magento\Cms\Model\Template\Filter;
 use Magento\Cms\Model\Template\FilterProvider;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Seo\Model\Cms\CmsPageResolver;
+use MageOS\Seo\Model\Cms\OgImagePath;
 use MageOS\Seo\Model\Config;
 use MageOS\Seo\Model\MetaTag\Provider\CmsPageMetaProvider;
+use MageOS\Seo\Test\Unit\Model\Cms\MediaFileInfoStub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -24,6 +27,8 @@ use Psr\Log\LoggerInterface;
  */
 class CmsPageMetaProviderTest extends TestCase
 {
+    use MediaFileInfoStub;
+
     private const BASE_URL = 'https://example.com/';
 
     /**
@@ -82,6 +87,82 @@ class CmsPageMetaProviderTest extends TestCase
     }
 
     /**
+     * The meta title is used before the page title.
+     *
+     * @return void
+     */
+    public function testTheMetaTitleIsTheTitle(): void
+    {
+        $tags = $this->tags('', $this->passThrough(), null, ['meta_title' => ' About Our Company ']);
+
+        $this->assertSame('About Our Company', $tags['og:title'] ?? null);
+    }
+
+    /**
+     * The Open Graph title and description come first. HTML is stripped. They are not truncated.
+     *
+     * @return void
+     */
+    public function testTheOpenGraphTitleAndDescriptionComeFirst(): void
+    {
+        $tags = $this->tags('', $this->passThrough(), null, [
+            'og_title'         => '<b>Meet</b> the team',
+            'meta_title'       => 'About Our Company',
+            'og_description'   => str_repeat('b', 200),
+            'meta_description' => 'Written for search results.',
+        ]);
+
+        $this->assertSame('Meet the team', $tags['og:title'] ?? null);
+        $this->assertSame(str_repeat('b', 200), $tags['og:description'] ?? null);
+    }
+
+    /**
+     * @return void
+     */
+    public function testTheMetaDescriptionFollowsAnEmptyOpenGraphDescription(): void
+    {
+        $tags = $this->tags('', $this->passThrough(), null, [
+            'og_description'   => ' <p> </p> ',
+            'meta_description' => 'Written for search results.',
+        ]);
+
+        $this->assertSame('Written for search results.', $tags['og:description'] ?? null);
+    }
+
+    /**
+     * The Open Graph image, stored as the Media Gallery posts it, is published under the media URL.
+     * It wins over the first content image, which is then not filtered.
+     *
+     * @return void
+     */
+    public function testTheOpenGraphImageComesBeforeTheContentsFirstImage(): void
+    {
+        $filter = $this->createMock(Filter::class);
+        $filter->expects($this->never())->method('filter');
+
+        $tags = $this->tags(
+            '<img src="{{media url=wysiwyg/a.jpg}}">',
+            $filter,
+            null,
+            ['og_image' => '/media/wysiwyg/og/team.jpg']
+        );
+
+        $this->assertSame('https://example.com/media/wysiwyg/og/team.jpg', $tags['og:image'] ?? null);
+    }
+
+    /**
+     * An absolute URL, as set by REST, is published as is.
+     *
+     * @return void
+     */
+    public function testAnAbsoluteOpenGraphImageIsPublishedAsIs(): void
+    {
+        $tags = $this->tags('', $this->passThrough(), null, ['og_image' => 'https://cdn.example.com/team.jpg']);
+
+        $this->assertSame('https://cdn.example.com/team.jpg', $tags['og:image'] ?? null);
+    }
+
+    /**
      * A failure is logged rather than swallowed: the page then has no Open Graph tags, and the log
      * says why.
      *
@@ -104,21 +185,34 @@ class CmsPageMetaProviderTest extends TestCase
      * @param string $content
      * @param Filter $filter
      * @param LoggerInterface|null $logger
+     * @param array<string, string> $data The page's other fields, read through their getters
      * @return array<string, string>
      */
-    private function tags(string $content, Filter $filter, ?LoggerInterface $logger = null): array
-    {
+    private function tags(
+        string $content,
+        Filter $filter,
+        ?LoggerInterface $logger = null,
+        array $data = []
+    ): array {
         $page = $this->createStub(Page::class);
         $page->method('getTitle')->willReturn('About us');
         $page->method('getContent')->willReturn($content);
-        $page->method('getMetaDescription')->willReturn('');
+        $page->method('getMetaTitle')->willReturn($data['meta_title'] ?? '');
+        $page->method('getMetaDescription')->willReturn($data['meta_description'] ?? '');
+        $page->method('getData')->willReturnCallback(
+            static fn (string $key = '') => $data[$key] ?? null
+        );
         $resolver = $this->createStub(CmsPageResolver::class);
         $resolver->method('resolve')->willReturn($page);
         $resolver->method('currentUrl')->willReturn(self::BASE_URL . 'about-us');
         $config = $this->createStub(Config::class);
         $config->method('isOgTagsEnabled')->willReturn(true);
         $store = $this->createStub(Store::class);
-        $store->method('getBaseUrl')->willReturn(self::BASE_URL);
+        $store->method('getBaseUrl')->willReturnCallback(
+            static fn (string $type = UrlInterface::URL_TYPE_LINK) => $type === UrlInterface::URL_TYPE_MEDIA
+                ? self::BASE_URL . 'media/'
+                : self::BASE_URL
+        );
         $storeManager = $this->createStub(StoreManagerInterface::class);
         $storeManager->method('getStore')->willReturn($store);
         $filterProvider = $this->createStub(FilterProvider::class);
@@ -129,7 +223,8 @@ class CmsPageMetaProviderTest extends TestCase
             $config,
             $storeManager,
             $filterProvider,
-            $logger ?? $this->createStub(LoggerInterface::class)
+            $logger ?? $this->createStub(LoggerInterface::class),
+            new OgImagePath($storeManager, $this->mediaFileInfo())
         );
 
         $tags = [];

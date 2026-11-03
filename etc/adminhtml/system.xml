@@ -22,6 +22,18 @@
 category pages.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="resize_image" translate="label comment" type="select"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Publish Images at the Open Graph Size</label>
+                    <comment>Products only. Resize product images to 1200 × 630 pixels, with og:image:width and
+og:image:height. The image keeps its proportions, centred on white. The size is the
+mageos_seo_og_image image in the theme's view.xml. No publishes the original image.
+Category and CMS page images are always published as uploaded.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="structured_data" translate="label" type="text" sortOrder="20"

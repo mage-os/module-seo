@@ -11,7 +11,7 @@ The SEO module provides structured data (JSON-LD), Open Graph meta tags, canonic
 | [Structured Data (JSON-LD)](structured-data.md) | How JSON-LD output works, which schemas are produced on which pages | Developer / SEO manager |
 | [Product Schema Templates](product-schema-templates.md) | The 16 built-in product templates and how to add new ones | Developer / merchandiser |
 | [Organisation Settings](organisation.md) | Configuring site identity, logo, socials, contact — per store/website | Admin / developer |
-| [Open Graph Tags](og-tags.md) | OG meta tag output on product and category pages | Admin / SEO manager |
+| [Open Graph Tags](og-tags.md) | OG tags on product, category and CMS pages, and the per-page Open Graph fields | Admin / SEO manager |
 | [Canonical URLs](canonical-urls.md) | How canonicals are managed and deduplicated | Developer / SEO manager |
 | [Robots Meta](robots-meta.md) | Global defaults and per-page overrides | Admin / SEO manager |
 | [Per-Category SEO](category-seo.md) | Schema template, field config, robots, ItemList per category | Admin / merchandiser |
@@ -57,6 +57,10 @@ After installing and running `bin/magento setup:upgrade`:
 | `mageos_seo_category_config` | Per-category SEO overrides, one row per category per store view |
 | `mageos_seo_product_override` | Per-product field overrides, one row per product per store view |
 
+The Open Graph title, description and image are EAV attributes on products and categories
+(`og_title`, `og_description`, `og_image`). On CMS pages they are `cms_page` columns of the same
+names. See [og-tags.md](og-tags.md#setting-them-per-page).
+
 The FAQ table, `mageos_faq`, is [MageOS_Faq](https://github.com/mage-os-lab/module-faq)'s.
 
 Records go when what they describe goes. `mageos_seo_category_config` and
@@ -81,6 +85,7 @@ All paths live under `mageos_seo_general/`:
 | Path | Default | Notes |
 |---|---|---|
 | `mageos_seo_general/og_tags/enabled` | 1 | Master switch for OG tags |
+| `mageos_seo_general/og_tags/resize_image` | 0 | Resize the product `og:image` to 1200 × 630, with `og:image:width` / `og:image:height`. See [og-tags.md](og-tags.md#image-size) |
 | `mageos_seo_general/structured_data/enabled` | 1 | Master switch for JSON-LD |
 | `mageos_seo_general/structured_data/default_product_template` | GenericProduct | Fallback template |
 | `mageos_seo_general/structured_data/category_item_list_enabled` | 1 | ItemList on category pages |

@@ -185,6 +185,11 @@ Configuration,Configuratie
 "Enable OG Tags","OG-tags inschakelen"
 "Output og:title, og:description, og:image, og:type on product and
 category pages.","Voer og:title, og:description, og:image en og:type uit op product- en categoriepagina's."
+"Publish Images at the Open Graph Size","Afbeeldingen publiceren op het Open Graph-formaat"
+"Products only. Resize product images to 1200 × 630 pixels, with og:image:width and
+og:image:height. The image keeps its proportions, centred on white. The size is the
+mageos_seo_og_image image in the theme's view.xml. No publishes the original image.
+Category and CMS page images are always published as uploaded.","Alleen producten. Verklein productafbeeldingen tot 1200 × 630 pixels, met og:image:width en og:image:height. De afbeelding behoudt haar verhoudingen, gecentreerd op wit. Het formaat is de afbeelding mageos_seo_og_image in view.xml van het thema. Nee publiceert de oorspronkelijke afbeelding. Categorie- en CMS-pagina-afbeeldingen worden altijd gepubliceerd zoals ze zijn geüpload."
 "Structured Data (JSON-LD)","Gestructureerde gegevens (JSON-LD)"
 "Enable JSON-LD Output","JSON-LD-uitvoer inschakelen"
 "Default Product Schema Template","Standaard productschemasjabloon"
@@ -336,6 +341,18 @@ generation only — and a Site Map entry you are not ready to publish stays unwr
 "Give each translation of this page the same value, for example
 ""about-us"", and they list one another as hreflang alternates. Letters, digits, dots, hyphens and
 underscores. Leave empty to link this page only to itself in other store views.","Geef elke vertaling van deze pagina dezelfde waarde, bijvoorbeeld ""over-ons"", dan vermelden ze elkaar als hreflang-alternatieven. Letters, cijfers, punten, koppeltekens en underscores. Laat leeg om deze pagina alleen aan zichzelf in andere winkelweergaven te koppelen."
+"Open Graph Title","Open Graph-titel"
+"Open Graph Description","Open Graph-beschrijving"
+"Open Graph Image","Open Graph-afbeelding"
+"Title of link previews. Leave empty to use the meta title, then the product name.","Titel van linkvoorbeelden. Laat leeg om de metatitel te gebruiken, en anders de productnaam."
+"Image of link previews, at least 1200 × 630 pixels. When no image has this role, the base image is used.","Afbeelding van linkvoorbeelden, minstens 1200 × 630 pixels. Heeft geen afbeelding deze rol, dan wordt de basisafbeelding gebruikt."
+"Title of link previews. Leave empty to use the meta title, then the category name.","Titel van linkvoorbeelden. Laat leeg om de metatitel te gebruiken, en anders de categorienaam."
+"Description of link previews. Leave empty to use the meta description, then the description.","Beschrijving van linkvoorbeelden. Laat leeg om de metabeschrijving te gebruiken, en anders de beschrijving."
+"Description of link previews. Leave empty to use the meta description, then the short description, then the description.","Beschrijving van linkvoorbeelden. Laat leeg om de metabeschrijving te gebruiken, en anders de korte beschrijving, en anders de beschrijving."
+"Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the category image.","Afbeelding van linkvoorbeelden, minstens 1200 × 630 pixels, gekozen uit de mediagalerij. Laat leeg om de categorieafbeelding te gebruiken."
+"Title of link previews. Leave empty to use the meta title, then the page title.","Titel van linkvoorbeelden. Laat leeg om de metatitel te gebruiken, en anders de paginatitel."
+"Description of link previews. Leave empty to use the meta description.","Beschrijving van linkvoorbeelden. Laat leeg om de metabeschrijving te gebruiken."
+"Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the first image in the page's content.","Afbeelding van linkvoorbeelden, minstens 1200 × 630 pixels, gekozen uit de mediagalerij. Laat leeg om de eerste afbeelding in de inhoud van de pagina te gebruiken."
 "Organization Identity","Identiteit van de organisatie"
 "Organization Name","Naam van de organisatie"
 "Canonical Site URL","Canonieke site-URL"

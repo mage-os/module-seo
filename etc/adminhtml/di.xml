@@ -93,5 +93,11 @@
     <type name="Magento\Cms\Model\Page\DataProvider">
         <plugin name="mageos_seo_add_seo_config_to_cms_page_form_data"
                 type="MageOS\Seo\Plugin\Cms\Page\AddSeoConfigToFormData"/>
+        <!--
+            Turns the stored Open Graph image path into the uploader's file list. It runs late
+            (sortOrder) and leaves values another plugin already turned into a list.
+        -->
+        <plugin name="mageos_seo_add_og_image_to_cms_page_form_data"
+                type="MageOS\Seo\Plugin\Cms\Page\AddOgImageToFormData" sortOrder="100"/>
     </type>
 </config>

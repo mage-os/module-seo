@@ -26,7 +26,7 @@ Every cross-cutting concern is built as an **extensible provider pool** — a se
 
 ### Meta & crawl control
 
-- **Open Graph + Twitter** — og:title/description/image/type/site_name/locale on product, category, and site pages, and the matching X card tags: `summary_large_image` or `summary` by whether the page has an image, with the title, description and image repeated as `twitter:*`.
+- **Open Graph + Twitter** — og:title/description/image/type/site_name/locale on product, category, CMS and site pages, and the matching X card tags: `summary_large_image` or `summary` by whether the page has an image, with the title, description and image repeated as `twitter:*`. Each product, category and CMS page can set its own Open Graph title, description and image. Otherwise the meta title and description are used. Product images can be published at 1200 × 630, with their size. See [docs/og-tags.md](docs/og-tags.md).
 - **Canonical URL management** — automatic canonicals on CMS and home pages, deduplicated if one is already present. Product and category canonicals are Magento core's, **off by default** (Catalog → Search Engine Optimization); `CanonicalUrlManagerInterface` lets a module such as a product-variant URL module replace one. See [docs/canonical-urls.md](docs/canonical-urls.md).
 - **Robots meta pool** — global INDEX/FOLLOW defaults for product, category, **and CMS** pages, overridable per category/product, plus a pagination provider for `?p=N` pages and enriched directives (`max-snippet`, `max-image-preview`, `noarchive`, `noai`, …).
 
@@ -113,7 +113,13 @@ Without a Name and URL saved, the Organization node in JSON-LD will render with 
 
 | Group | Key settings | Default |
 | --- | --- | --- |
-| Open Graph Tags | Enable OG/Twitter tags | Yes |
+| Open Graph Tags | Enable OG/Twitter tags, publish product images at the Open Graph size (1200 × 630) | Yes / No |
+
+Category and CMS page Open Graph images are Media Gallery renditions. Set **Advanced > System > Media
+Gallery Image Optimization** to 1200 × 630 (`system/media_gallery_renditions/width` and `height`). See
+[og-tags.md](docs/og-tags.md#rendition-size).
+
+
 | Structured Data (JSON-LD) | Master switch, default product template, ItemList toggle & max, most variants per configurable product, aggregate rating, publish a price of zero | Yes / GenericProduct |
 | Canonical URLs | Canonical link on CMS pages and the home page | Yes |
 | Robots Meta | Product / category / **CMS** / search results defaults, pagination policy | *(empty — Magento default applies)* |
