@@ -142,5 +142,12 @@
             "PRIMARY": true,
             "MAGEOS_SEO_FAQ_STORE_ID_STORE_STORE_ID": true
         }
+    },
+    "cms_page": {
+        "column": {
+            "og_title": true,
+            "og_description": true,
+            "og_image": true
+        }
     }
 }

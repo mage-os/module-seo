@@ -12,6 +12,7 @@ use MageOS\Seo\Model\Config\Source\SitemapGenerator;
 class Config implements StorefrontSettingsInterface
 {
     public const XML_OG_TAGS_ENABLED               = 'mageos_seo_general/og_tags/enabled';
+    public const XML_OG_IMAGE_RESIZE               = 'mageos_seo_general/og_tags/resize_image';
     public const XML_SD_ENABLED                    = 'mageos_seo_general/structured_data/enabled';
     public const XML_SD_DEFAULT_TEMPLATE           = 'mageos_seo_general/structured_data/default_product_template';
     public const XML_SD_CATEGORY_ITEM_LIST_ENABLED = 'mageos_seo_general/structured_data/category_item_list_enabled';
@@ -79,6 +80,23 @@ class Config implements StorefrontSettingsInterface
     {
         return (bool) $this->scopeConfig->getValue(
             self::XML_OG_TAGS_ENABLED,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * Whether the product og:image is resized to the Open Graph size (etc/view.xml).
+     *
+     * If so, og:image:width and og:image:height are published too. Products only.
+     *
+     * @param int|string|null $storeId
+     * @return bool
+     */
+    public function isOgImageResized(int|string|null $storeId = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_OG_IMAGE_RESIZE,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

@@ -1,0 +1,44 @@
+<!--
+/**
+ * Core's image uploader (Magento_Ui::form/element/uploader/image.html), gallery only.
+ *
+ * No file input, Upload button or drop zone: the image is picked with "Select from Gallery".
+ * New images are uploaded inside the Media Gallery. Without the file input, the uploader is
+ * never initialised, so nothing can be dropped on the field.
+ */
+-->
+<div class="admin__field" visible="visible" css="$data.additionalClasses">
+    <label class="admin__field-label" if="$data.label" attr="for: mediaGalleryUid">
+        <span translate="label" attr="'data-config-scope': $data.scopeLabel"></span>
+    </label>
+
+    <div class="admin__field-control" css="'_with-tooltip': $data.tooltip">
+        <div class="file-uploader image-uploader" css="_loading: isLoading">
+            <div class="file-uploader-area">
+                <label
+                    data-bind="event: {change: addFileFromMediaGallery, click: openMediaBrowserDialog}"
+                    class="file-uploader-button action-default"
+                    attr="id: mediaGalleryUid, disabled: disabled"
+                    data-force_static_path="1"
+                    translate="'Select from Gallery'"></label>
+                <render args="fallbackResetTpl" if="$data.showFallbackReset && $data.isDifferedFromDefault"></render>
+                <p class="image-upload-requirements" if="$data.allowedExtensions">
+                    <span translate="'Allowed file types'"></span>: <text args="getAllowedFileExtensionsInCommaDelimitedFormat()"></text>.
+                </p>
+            </div>
+
+            <render args="tooltipTpl" if="$data.tooltip"></render>
+
+            <div class="admin__field-note" if="$data.notice" attr="id: noticeId">
+                <!-- ko with: {noticeUnsanitizedHtml: notice} -->
+                <span html="noticeUnsanitizedHtml"></span>
+                <!-- /ko -->
+            </div>
+
+            <label class="admin__field-error" if="error" attr="for: mediaGalleryUid" text="error"></label>
+
+            <each args="data: value, as: '$file'" render="$parent.getPreviewTmpl($file)"></each>
+        </div>
+        <render args="$data.service.template" if="$data.hasService()"></render>
+    </div>
+</div>

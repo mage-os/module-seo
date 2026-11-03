@@ -8,6 +8,45 @@ hardcoded version field).
 
 ## [Unreleased]
 
+### Added
+
+- **Open Graph Title, Description and Image on products, categories and CMS pages.** When set,
+  they become `og:title`, `og:description` and `og:image`, and their `twitter:*` copies.
+  - Products and categories: EAV attributes `og_title`, `og_description` and `og_image`, store view
+    scope. The text fields are in Search Engine Optimization. The product image is an image role in
+    Images and Videos. The category image is in Search Engine Optimization.
+  - CMS pages: `cms_page` columns of the same names, with fields in Search Engine Optimization.
+  - The category and CMS page images are picked from the Media Gallery, with **Select from
+    Gallery**. The fields have no Upload button or drop zone: new images are uploaded inside the
+    gallery.
+    A rendition (`.renditions/`) is published as picked. See the README for its size.
+  - A CMS page's `og_image` is stored as the Media Gallery posts it, like core's category image: a
+    path from the web root (`/media/wysiwyg/team.jpg`). Core's
+    `Magento\Catalog\Model\Category\FileInfo` resolves it to the store view's media URL. Other values, such as an absolute URL, are published
+    as is.
+  - Open Graph modules commonly use these codes, so existing values are kept.
+  - Pages without them are unchanged. See [og-tags.md](docs/og-tags.md#setting-them-per-page).
+- **Publish Images at the Open Graph Size** (Open Graph Tags, off by default). The product
+  `og:image` is resized to 1200 × 630, framed on white, with `og:image:width` and
+  `og:image:height`. The size is the `mageos_seo_og_image` image in this module's `etc/view.xml`.
+  A theme can change it. Products only: category and CMS page images keep their original URL.
+  See [og-tags.md](docs/og-tags.md#image-size).
+
+### Changed
+
+- **`og:title` and `og:description` take the meta title and meta description first**
+  ([#51](https://github.com/mage-os/module-seo/issues/51)), on products, categories and CMS pages.
+  - `og:title` then falls back to the name, or the CMS page title.
+  - `og:description` then falls back to the short description, then the description, on products.
+    Categories fall back to the description. CMS pages
+    already used the meta description.
+  - A category with a meta description but no description now gets an `og:description`.
+  - Page Builder `<style>` blocks are stripped from product descriptions too.
+  - `twitter:title` and `twitter:description` still repeat them.
+- **Constructors:** `Model\MetaTag\Provider\CmsPageMetaProvider` takes `Model\Cms\OgImagePath`.
+  `ProductMetaProvider` takes `Magento\Framework\View\ConfigInterface`. `CategoryMetaProvider`
+  takes `Magento\Catalog\Model\Category\Image`. None of them is `@api`.
+
 ## [2.2.1] — 2026-10-29
 
 ### Fixed

@@ -12,6 +12,66 @@ Default: enabled. This is a per-store-view setting.
 
 When disabled, no `og:` or `product:` meta tags are output anywhere on the site.
 
+## Image size
+
+**Stores → Configuration → MageOS SEO → SEO → Open Graph Tags → Publish Images at the Open Graph Size**
+
+Default: No. This is a per-store-view setting.
+
+This setting applies to products only. Category and CMS page images are always published at their
+original URL, as uploaded.
+
+With No, the product `og:image` is the theme's `product_page_image_large`, which Luma and Hyvä do
+not resize.
+
+With Yes, product images are resized to **1200 × 630**. Facebook, LinkedIn and X show
+large link previews at that size. The size is published too:
+
+```html
+<meta property="og:image" content="https://example.com/media/catalog/product/cache/…/w/s/ws12-orange_main_4.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+```
+
+The image keeps its proportions and is centred on a white canvas of exactly that size. So a crawler
+knows the size before it fetches the image.
+
+The size is the `mageos_seo_og_image` image, declared in this module's `etc/view.xml`. A theme can
+change it in its own view.xml, like any catalog image size:
+
+```xml
+<images module="Magento_Catalog">
+    <image id="mageos_seo_og_image" type="image">
+        <width>1200</width>
+        <height>628</height>
+    </image>
+</images>
+```
+
+With `<frame>false</frame>`, the image is only fitted inside the size. Its size is then unknown, so
+`og:image:width` / `og:image:height` are left out.
+
+Products are resized by the catalog image helper into `pub/media/catalog/product/cache/`.
+`bin/magento catalog:images:resize` creates them in advance. Flush Catalog Images Cache removes
+them. A product without an image gets the placeholder, without a size.
+
+### Rendition size
+
+Category and CMS page images come from the Media Gallery. With image optimization on, the gallery
+inserts a rendition, at most 1000 × 1000 pixels by default. Set the rendition size to the Open Graph
+size:
+
+**Stores → Configuration → Advanced → System → Media Gallery Image Optimization**: Maximum Width
+1200, Maximum Height 630.
+
+```bash
+bin/magento config:set system/media_gallery_renditions/width 1200
+bin/magento config:set system/media_gallery_renditions/height 630
+```
+
+The setting is global and applies to every image inserted from the gallery, content images too.
+Existing renditions are not regenerated: pick the image again.
+
 ---
 
 ## What gets output
@@ -21,10 +81,10 @@ When disabled, no `og:` or `product:` meta tags are output anywhere on the site.
 | Tag | Value |
 |---|---|
 | `og:type` | `product` |
-| `og:title` | Product name |
+| `og:title` | Open Graph Title, else the meta title, else the product name |
 | `og:url` | Product canonical URL |
-| `og:description` | Short description (HTML stripped, truncated to 300 characters) |
-| `og:image` | First product image URL |
+| `og:description` | Open Graph Description, else the meta description, else the short description, else the description. HTML and Page Builder styles are stripped. Fallbacks are truncated to 160 characters |
+| `og:image` | The image with the Open Graph Image role, else the base image |
 | `product:price:amount` | Final price formatted to 2 decimal places: the price the structured data publishes (`Model\Product\FinalPrice`) |
 | `product:price:currency` | ISO currency code (e.g. `GBP`) |
 | `product:availability` | `in stock`, `available for order` (on backorder) or `out of stock`, from the stock index the structured data reads; left out when the stock could not be read |
@@ -36,24 +96,76 @@ price of 0 (unless **Publish a Price of Zero** is on, for a simple product), a c
 that cannot be read, which is logged with the SKU. The structured data's offer leaves its price out
 in the same cases; see [structured-data.md](structured-data.md).
 
+The Open Graph fields (below) are written for link previews, so they come first. They are used as
+written, with HTML stripped. The meta title and description come next. Then the name, the
+description and the short description. The order is the same on products, categories and CMS pages.
+Categories have no short description, and CMS pages have neither.
+
 ### Category pages
 
 | Tag | Value |
 |---|---|
 | `og:type` | `website` |
-| `og:title` | Category name |
+| `og:title` | Open Graph Title, else the meta title, else the category name |
 | `og:url` | Category URL |
-| `og:description` | Category description (HTML stripped, truncated to 300 characters) |
-| `og:image` | Category image URL (omitted if no image is set) |
+| `og:description` | Open Graph Description, else the meta description, else the category description. HTML is stripped. Fallbacks are truncated to 160 characters |
+| `og:image` | Open Graph Image, else the category image, at its original URL. Omitted if neither is set |
 
 ### CMS pages
 
 | Tag | Value |
 |---|---|
 | `og:type` | `website` |
-| `og:title` | CMS page title |
+| `og:title` | Open Graph Title, else the meta title, else the CMS page title |
 | `og:url` | CMS page canonical URL |
-| `og:description` | CMS page meta description |
+| `og:description` | Open Graph Description, else the meta description (truncated to 160 characters) |
+| `og:image` | Open Graph Image, else the first image in the page's content. Omitted if there is none |
+
+---
+
+## Setting them per page
+
+Each product, category and CMS page has an **Open Graph Title**, **Open Graph Description** and
+**Open Graph Image**. Leave them empty to use the fallbacks above.
+
+| Page | Where | Stored as |
+|---|---|---|
+| Product | Title and description: **Search Engine Optimization**. Image: the **Open Graph Image** role in **Images and Videos**, chosen like the base or small image | EAV attributes `og_title`, `og_description`, `og_image` (store view) |
+| Category | **Search Engine Optimization**, below the meta description. The image is picked from the Media Gallery | EAV attributes `og_title`, `og_description`, `og_image` (store view) |
+| CMS page | **Search Engine Optimization**, below the robots and hreflang fields. The image is picked from the Media Gallery | `cms_page` columns `og_title`, `og_description`, `og_image` |
+
+The title and description are used as written, with HTML stripped. The image should be at least
+1200 × 630 pixels. Product and category values have store view scope, like their meta title and
+description. CMS pages are already assigned to store views.
+
+The category and CMS page image fields have no Upload button and no drop zone. Click **Select from
+Gallery**, then pick an image, or upload a new one inside the Media Gallery (`Magento_MediaGalleryUi`).
+The old media browser works too, when **Stores > Configuration > Advanced > System > Media Gallery >
+Enable Old Media Gallery** is Yes. The old browser opens in `catalog/category` for categories and in
+`wysiwyg` for CMS pages. The Media Gallery can open in another folder.
+
+With image optimization on, the Media Gallery inserts a rendition (`.renditions/...`). It is
+published as picked. Renditions are 1000 × 1000 pixels at most by default, below the 1200 × 630 link
+previews use. See [Rendition size](#rendition-size).
+
+- A category stores the pick as core's category image does: its `/media/...` path
+  (`/media/.renditions/wysiwyg/team.jpg`). `og:image` is that path under the store view's URL.
+- A CMS page's `og_image` is stored as the Media Gallery posts it, like core's category image: its
+  path from the web root (`/media/.renditions/wysiwyg/team.jpg`). Core's
+  `Magento\Catalog\Model\Category\FileInfo` resolves it to a path in the media directory, which is
+  published under each store view's media URL.
+- A value outside the media directory, such as an absolute `http(s)` URL set by REST, is published
+  as is.
+
+### Coming from another Open Graph module
+
+Open Graph modules commonly use these attribute codes and column names. A store that already has
+`og_title`, `og_description` and `og_image` keeps its values. `setup:upgrade` updates the attribute
+definitions (labels, group, store view scope) and leaves the values alone. For the same reason,
+`og_description` stays a varchar on products and categories.
+
+Remove the other module when you no longer need its tags. While both are enabled, both print Open
+Graph tags, and the admin forms show both sets of fields.
 
 ---
 

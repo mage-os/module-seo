@@ -7,6 +7,12 @@
     The value is not a cms_page column — it lives in mageos_seo_cms_page_config, on the page's
     global row — so it is loaded into the form by Plugin\Cms\Page\AddSeoConfigToFormData and saved
     by Observer\Adminhtml\SaveCmsPageSeoConfig.
+
+    The Open Graph title, description and image are cms_page columns, so the page saves them itself.
+    The image is picked from the Media Gallery only (MageOS_Seo::form/element/uploader/gallery-image):
+    new images are uploaded inside the gallery. Only the image needs conversion.
+    Plugin\Cms\Page\AddOgImageToFormData turns the stored path into the uploader's file list.
+    Observer\Adminhtml\SaveCmsPageOgImage turns it back.
 -->
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
@@ -34,6 +40,51 @@
 "about-us", and they list one another as hreflang alternates. Letters, digits, dots, hyphens and
 underscores. Leave empty to link this page only to itself in other store views.</notice>
             </settings>
+        </field>
+        <field name="og_title" sortOrder="100" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Open Graph Title</label>
+                <dataScope>og_title</dataScope>
+                <validation>
+                    <rule name="max_text_length" xsi:type="number">255</rule>
+                </validation>
+                <notice translate="true">Title of link previews. Leave empty to use the meta title, then the page title.</notice>
+            </settings>
+        </field>
+        <field name="og_description" sortOrder="110" formElement="textarea">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Open Graph Description</label>
+                <dataScope>og_description</dataScope>
+                <notice translate="true">Description of link previews. Leave empty to use the meta description.</notice>
+            </settings>
+        </field>
+        <field name="og_image" sortOrder="120" formElement="imageUploader">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                    <!-- The image uploader renders its template, not elementTmpl. -->
+                    <item name="template" xsi:type="string">MageOS_Seo/form/element/uploader/gallery-image</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>string</dataType>
+                <label translate="true">Open Graph Image</label>
+                <dataScope>og_image</dataScope>
+                <notice translate="true">Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the first image in the page's content.</notice>
+            </settings>
+            <formElements>
+                <imageUploader>
+                    <settings>
+                        <required>false</required>
+                        <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                        <openDialogTitle>Media Gallery</openDialogTitle>
+                        <initialMediaGalleryOpenSubpath>wysiwyg</initialMediaGalleryOpenSubpath>
+                        <allowedExtensions>jpg jpeg gif png webp</allowedExtensions>
+                    </settings>
+                </imageUploader>
+            </formElements>
         </field>
     </fieldset>
 </form>

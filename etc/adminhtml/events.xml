@@ -21,6 +21,15 @@
                   instance="MageOS\Seo\Observer\Adminhtml\SaveCategorySeoConfig"/>
     </event>
 
+    <!--
+        Stores the CMS page form's Open Graph image upload as a path on cms_page. Runs on the model
+        save, so after any cms_page_prepare_save observer.
+    -->
+    <event name="cms_page_save_before">
+        <observer name="mageos_seo_save_cms_page_og_image"
+                  instance="MageOS\Seo\Observer\Adminhtml\SaveCmsPageOgImage"/>
+    </event>
+
     <!-- CMS page "Search Engine Optimization" fieldset -->
     <event name="cms_page_save_after">
         <observer name="mageos_seo_save_cms_page_seo_config"

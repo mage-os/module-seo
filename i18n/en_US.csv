@@ -186,6 +186,14 @@ Configuration,Configuration
 "Output og:title, og:description, og:image, og:type on product and
 category pages.","Output og:title, og:description, og:image, og:type on product and
 category pages."
+"Publish Images at the Open Graph Size","Publish Images at the Open Graph Size"
+"Products only. Resize product images to 1200 × 630 pixels, with og:image:width and
+og:image:height. The image keeps its proportions, centred on white. The size is the
+mageos_seo_og_image image in the theme's view.xml. No publishes the original image.
+Category and CMS page images are always published as uploaded.","Products only. Resize product images to 1200 × 630 pixels, with og:image:width and
+og:image:height. The image keeps its proportions, centred on white. The size is the
+mageos_seo_og_image image in the theme's view.xml. No publishes the original image.
+Category and CMS page images are always published as uploaded."
 "Structured Data (JSON-LD)","Structured Data (JSON-LD)"
 "Enable JSON-LD Output","Enable JSON-LD Output"
 "Default Product Schema Template","Default Product Schema Template"
@@ -385,6 +393,18 @@ generation only — and a Site Map entry you are not ready to publish stays unwr
 underscores. Leave empty to link this page only to itself in other store views.","Give each translation of this page the same value, for example
 ""about-us"", and they list one another as hreflang alternates. Letters, digits, dots, hyphens and
 underscores. Leave empty to link this page only to itself in other store views."
+"Open Graph Title","Open Graph Title"
+"Open Graph Description","Open Graph Description"
+"Open Graph Image","Open Graph Image"
+"Title of link previews. Leave empty to use the meta title, then the product name.","Title of link previews. Leave empty to use the meta title, then the product name."
+"Image of link previews, at least 1200 × 630 pixels. When no image has this role, the base image is used.","Image of link previews, at least 1200 × 630 pixels. When no image has this role, the base image is used."
+"Title of link previews. Leave empty to use the meta title, then the category name.","Title of link previews. Leave empty to use the meta title, then the category name."
+"Description of link previews. Leave empty to use the meta description, then the description.","Description of link previews. Leave empty to use the meta description, then the description."
+"Description of link previews. Leave empty to use the meta description, then the short description, then the description.","Description of link previews. Leave empty to use the meta description, then the short description, then the description."
+"Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the category image.","Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the category image."
+"Title of link previews. Leave empty to use the meta title, then the page title.","Title of link previews. Leave empty to use the meta title, then the page title."
+"Description of link previews. Leave empty to use the meta description.","Description of link previews. Leave empty to use the meta description."
+"Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the first image in the page's content.","Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the first image in the page's content."
 "Organization Identity","Organization Identity"
 "Organization Name","Organization Name"
 "Canonical Site URL","Canonical Site URL"

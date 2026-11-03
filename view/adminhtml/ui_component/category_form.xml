@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    The category's Open Graph title, description and image, in core's Search Engine Optimization
+    section, beside the meta fields they fall back to.
+
+    They are EAV attributes (Setup\Patch\Data\AddOpenGraphAttributes). Core's data provider loads and
+    saves them, with store view scope and "Use Default Value". The image is picked from the Media
+    Gallery only (MageOS_Seo::form/element/uploader/gallery-image): new images are uploaded inside
+    the gallery. Core's category image backend stores a pick as its /media/... path.
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="search_engine_optimization">
+        <field name="og_title" sortOrder="160" formElement="input">
+            <settings>
+                <dataType>string</dataType>
+                <label translate="true">Open Graph Title</label>
+                <validation>
+                    <rule name="max_text_length" xsi:type="number">255</rule>
+                </validation>
+                <notice translate="true">Title of link previews. Leave empty to use the meta title, then the category name.</notice>
+            </settings>
+        </field>
+        <field name="og_description" sortOrder="170" formElement="textarea">
+            <settings>
+                <dataType>string</dataType>
+                <label translate="true">Open Graph Description</label>
+                <validation>
+                    <rule name="max_text_length" xsi:type="number">255</rule>
+                </validation>
+                <notice translate="true">Description of link previews. Leave empty to use the meta description, then the description.</notice>
+            </settings>
+        </field>
+        <field name="og_image" sortOrder="180" formElement="imageUploader">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">category</item>
+                    <!-- The image uploader renders its template, not elementTmpl. -->
+                    <item name="template" xsi:type="string">MageOS_Seo/form/element/uploader/gallery-image</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>string</dataType>
+                <label translate="true">Open Graph Image</label>
+                <notice translate="true">Image of link previews, at least 1200 × 630 pixels, picked from the Media Gallery. Leave empty to use the category image.</notice>
+            </settings>
+            <formElements>
+                <imageUploader>
+                    <settings>
+                        <required>false</required>
+                        <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                        <openDialogTitle>Media Gallery</openDialogTitle>
+                        <initialMediaGalleryOpenSubpath>catalog/category</initialMediaGalleryOpenSubpath>
+                        <allowedExtensions>jpg jpeg gif png webp avif</allowedExtensions>
+                    </settings>
+                </imageUploader>
+            </formElements>
+        </field>
+    </fieldset>
+</form>

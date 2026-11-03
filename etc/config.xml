@@ -5,6 +5,7 @@
         <mageos_seo_general>
             <og_tags>
                 <enabled>1</enabled>
+                <resize_image>0</resize_image>
             </og_tags>
             <structured_data>
                 <enabled>1</enabled>

@@ -59,6 +59,7 @@ class ConfigTest extends TestCase
 
         return [
             'og tags'             => ['isOgTagsEnabled', Config::XML_OG_TAGS_ENABLED, [self::STORE_ID], $store],
+            'og image size'       => ['isOgImageResized', Config::XML_OG_IMAGE_RESIZE, [self::STORE_ID], $store],
             'structured data'     => ['isStructuredDataEnabled', Config::XML_SD_ENABLED, [self::STORE_ID], $store],
             'category item list'  => [
                 'isCategoryItemListEnabled',
