@@ -35,6 +35,16 @@
     </type>
 
     <!--
+        Stop the theme's breadcrumbs template printing a second BreadcrumbList beside this module's
+        (issue #55). A plugin, not a layout argument: a block recreated after layout loses its
+        arguments, and subclasses (Hyvä's product breadcrumbs) are covered too.
+    -->
+    <type name="Magento\Theme\Block\Html\Breadcrumbs">
+        <plugin name="mageos_seo_skip_theme_breadcrumb_schema"
+                type="MageOS\Seo\Plugin\View\SkipThemeBreadcrumbSchema"/>
+    </type>
+
+    <!--
         Without MSI, read stock through core's request cache, which a product load fills, so a
         product page costs no query for its own product. Storefront only, as MSI's own request cache
         is: a queue consumer keeps core's cache from one message to the next, so a rebuild could read

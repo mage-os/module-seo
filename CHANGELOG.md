@@ -8,6 +8,16 @@ hardcoded version field).
 
 ## [Unreleased]
 
+### Fixed
+
+- **One BreadcrumbList on Hyvä, not two**
+  ([#55](https://github.com/mage-os/module-seo/issues/55)). Hyvä's breadcrumbs template prints its
+  own BreadcrumbList JSON-LD unless the block's `skip_ld_json_schema` flag is set, so Hyvä pages
+  carried the theme's and this module's. A frontend plugin on `Magento\Theme\Block\Html\Breadcrumbs`
+  now sets the flag while structured data is enabled and the page is not one of the provider's
+  `excludedHandles`. It covers subclasses and blocks recreated after layout. Luma's template never
+  reads the flag.
+
 ## [2.2.1] — 2026-10-29
 
 ### Fixed
