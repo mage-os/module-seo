@@ -104,6 +104,12 @@ class BreadcrumbListProviderTest extends TestCase
         $this->layout->method('getUpdate')->willReturn($this->layoutProcessor);
 
         $this->assertSame([], $this->makeProvider(['makers_landing'])->getSchemas());
+        $this->assertTrue($this->makeProvider(['makers_landing'])->isExcluded());
+    }
+
+    public function testAPageOutsideTheExcludedHandlesIsNotExcluded(): void
+    {
+        $this->assertFalse($this->makeProvider(['makers_landing'])->isExcluded());
     }
 
     public function testHyvaBlockCrumbsBuildBreadcrumbList(): void

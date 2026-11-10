@@ -68,8 +68,14 @@ class ProductMetaProvider implements MetaTagProviderInterface
 
         $title = $product->getName();
 
+        // The meta description is written for previews; the short description is often a list or
+        // a spec block, so it is only the fallback.
         $description = mb_substr(
-            strip_tags((string) $product->getShortDescription() ?: (string) $product->getDescription()),
+            trim(strip_tags(
+                (string) $product->getData('meta_description')
+                ?: (string) $product->getData('short_description')
+                ?: (string) $product->getData('description')
+            )),
             0,
             160
         );

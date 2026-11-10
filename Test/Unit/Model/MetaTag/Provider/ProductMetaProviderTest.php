@@ -64,6 +64,35 @@ class ProductMetaProviderTest extends TestCase
         $this->assertSame([], $tags);
     }
 
+    public function testTheMetaDescriptionIsTheDescription(): void
+    {
+        // Issue #51: the meta description is written for previews.
+        $product = $this->product('simple', 12.5, [
+            'meta_description'  => 'Soft cotton tee.',
+            'short_description' => '<ul><li>100% cotton</li></ul>',
+        ]);
+
+        $this->assertSame('Soft cotton tee.', $this->tag($this->provider($product), 'og:description'));
+    }
+
+    public function testTheShortDescriptionIsTheFallback(): void
+    {
+        $product = $this->product('simple', 12.5, [
+            'meta_description'  => '',
+            'short_description' => '<p>A <b>soft</b> tee.</p>',
+            'description'       => 'Long description.',
+        ]);
+
+        $this->assertSame('A soft tee.', $this->tag($this->provider($product), 'og:description'));
+    }
+
+    public function testTheDescriptionIsTheLastFallback(): void
+    {
+        $product = $this->product('simple', 12.5, ['description' => 'Long description.']);
+
+        $this->assertSame('Long description.', $this->tag($this->provider($product), 'og:description'));
+    }
+
     /**
      * The provider over a product page showing the given product.
      *
@@ -104,9 +133,10 @@ class ProductMetaProviderTest extends TestCase
      *
      * @param string $typeId
      * @param float|null $finalPrice
+     * @param array<string, string> $data Attribute values read through getData()
      * @return Product
      */
-    private function product(string $typeId, ?float $finalPrice): Product
+    private function product(string $typeId, ?float $finalPrice, array $data = []): Product
     {
         $price = $this->createStub(PriceInterface::class);
         if ($finalPrice === null) {
@@ -128,6 +158,9 @@ class ProductMetaProviderTest extends TestCase
         $product->method('getName')->willReturn('Tee');
         $product->method('getSku')->willReturn('TEE');
         $product->method('getProductUrl')->willReturn('https://example.com/tee.html');
+        $product->method('getData')->willReturnCallback(
+            static fn ($key = '') => $data[$key] ?? null
+        );
 
         return $product;
     }
@@ -148,5 +181,23 @@ class ProductMetaProviderTest extends TestCase
         }
 
         return $tags;
+    }
+
+    /**
+     * The content of one Open Graph tag, or null when the provider has none.
+     *
+     * @param ProductMetaProvider $provider
+     * @param string $property
+     * @return string|null
+     */
+    private function tag(ProductMetaProvider $provider, string $property): ?string
+    {
+        foreach ($provider->getMetaTags() as $tag) {
+            if (($tag['property'] ?? '') === $property) {
+                return (string) $tag['content'];
+            }
+        }
+
+        return null;
     }
 }
