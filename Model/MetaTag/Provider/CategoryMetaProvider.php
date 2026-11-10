@@ -52,7 +52,10 @@ class CategoryMetaProvider implements MetaTagProviderInterface
                 ['property' => 'og:url',   'content' => $category->getUrl()],
             ];
 
-            $rawDescription = (string) $category->getDescription();
+            // The meta description is written for previews; the description is often empty, or a
+            // banner or Page Builder layout, so it is only the fallback.
+            $rawDescription = trim((string) $category->getData('meta_description'))
+                ?: (string) $category->getData('description');
             if ($rawDescription !== '') {
                 // Strip PageBuilder <style> blocks before strip_tags
                 $clean = preg_replace('/<style\b[^>]*>.*?<\/style>/is', '', $rawDescription) ?? $rawDescription;

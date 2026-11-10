@@ -23,7 +23,7 @@ When disabled, no `og:` or `product:` meta tags are output anywhere on the site.
 | `og:type` | `product` |
 | `og:title` | Product name |
 | `og:url` | Product canonical URL |
-| `og:description` | Short description (HTML stripped, truncated to 300 characters) |
+| `og:description` | Meta description; when it is empty, the short description, then the description (HTML stripped, truncated to 160 characters) |
 | `og:image` | First product image URL |
 | `product:price:amount` | Final price formatted to 2 decimal places: the price the structured data publishes (`Model\Product\FinalPrice`) |
 | `product:price:currency` | ISO currency code (e.g. `GBP`) |
@@ -43,7 +43,7 @@ in the same cases; see [structured-data.md](structured-data.md).
 | `og:type` | `website` |
 | `og:title` | Category name |
 | `og:url` | Category URL |
-| `og:description` | Category description (HTML stripped, truncated to 300 characters) |
+| `og:description` | Meta description; when it is empty, the category description (HTML stripped, truncated to 160 characters) |
 | `og:image` | Category image URL (omitted if no image is set) |
 
 ### CMS pages
