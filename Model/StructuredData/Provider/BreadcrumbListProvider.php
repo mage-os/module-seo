@@ -53,11 +53,8 @@ class BreadcrumbListProvider implements StructuredDataProviderInterface
      */
     public function getSchemas(): array
     {
-        $activeHandles = $this->layout->getUpdate()->getHandles();
-        foreach ($this->excludedHandles as $excluded) {
-            if (\in_array((string) $excluded, $activeHandles, true)) {
-                return [];
-            }
+        if ($this->isExcluded()) {
+            return [];
         }
 
         try {
@@ -93,6 +90,23 @@ class BreadcrumbListProvider implements StructuredDataProviderInterface
         } catch (\Exception) {
             return [];
         }
+    }
+
+    /**
+     * Whether the current page is one of the excluded handles, which manage their own breadcrumb schema.
+     *
+     * @return bool
+     */
+    public function isExcluded(): bool
+    {
+        $activeHandles = $this->layout->getUpdate()->getHandles();
+        foreach ($this->excludedHandles as $excluded) {
+            if (\in_array((string) $excluded, $activeHandles, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

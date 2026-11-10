@@ -15,7 +15,7 @@ The module outputs JSON-LD `<script type="application/ld+json">` blocks in the `
 
 The Organization and WebSite nodes appear on every page because they are site-wide identity data. The BreadcrumbList node follows the trail the page shows:
 
-- **Hyvä** exposes its breadcrumbs block's crumbs, and the node is built from them — the trail as rendered.
+- **Hyvä** exposes its breadcrumbs block's crumbs, and the node is built from them — the trail as rendered. Hyvä's breadcrumbs template prints its own BreadcrumbList unless the block has `skip_ld_json_schema` set; the module sets it while structured data is on, so the page carries one BreadcrumbList, not two.
 - **Luma** keeps its crumbs to itself and draws the product trail in JavaScript, so the node is rebuilt from core's catalog breadcrumb path. On a product page it has the category only when the URL carries one (a category-path product URL); otherwise it is **Home › Product**, as Luma shows it. Core would otherwise supply the category the visitor last browsed, from their session, and the page cache would keep that one visitor's trail for everyone.
 - The last crumb has no `item`: [Google documents](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb) that it is not required there, and uses the page's own URL.
 
