@@ -185,6 +185,14 @@ Configuration,Configuratie
 "Enable OG Tags","OG-tags inschakelen"
 "Output og:title, og:description, og:image, og:type on product and
 category pages.","Voer og:title, og:description, og:image en og:type uit op product- en categoriepagina's."
+"X (Twitter) Account","X (Twitter)-account"
+"The store's X username, e.g. @examplestore, output as twitter:site on every
+page. A profile URL works too. Leave empty for none.","De X-gebruikersnaam van de winkel, bijv. @voorbeeldwinkel, als twitter:site op elke
+pagina. Een profiel-URL werkt ook. Laat leeg voor geen."
+"X (Twitter) Creator","X (Twitter)-maker"
+"Output as twitter:creator on every page, e.g. the same account as above.
+Leave empty for none.","Als twitter:creator op elke pagina, bijv. hetzelfde account als hierboven.
+Laat leeg voor geen."
 "Structured Data (JSON-LD)","Gestructureerde gegevens (JSON-LD)"
 "Enable JSON-LD Output","JSON-LD-uitvoer inschakelen"
 "Default Product Schema Template","Standaard productschemasjabloon"

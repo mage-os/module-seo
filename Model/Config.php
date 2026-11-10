@@ -12,6 +12,8 @@ use MageOS\Seo\Model\Config\Source\SitemapGenerator;
 class Config implements StorefrontSettingsInterface
 {
     public const XML_OG_TAGS_ENABLED               = 'mageos_seo_general/og_tags/enabled';
+    public const XML_OG_TWITTER_SITE               = 'mageos_seo_general/og_tags/twitter_site';
+    public const XML_OG_TWITTER_CREATOR            = 'mageos_seo_general/og_tags/twitter_creator';
     public const XML_SD_ENABLED                    = 'mageos_seo_general/structured_data/enabled';
     public const XML_SD_DEFAULT_TEMPLATE           = 'mageos_seo_general/structured_data/default_product_template';
     public const XML_SD_CATEGORY_ITEM_LIST_ENABLED = 'mageos_seo_general/structured_data/category_item_list_enabled';
@@ -82,6 +84,47 @@ class Config implements StorefrontSettingsInterface
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
+    }
+
+    /**
+     * The store's X (Twitter) account for twitter:site, as "@handle", or '' when none is set.
+     *
+     * @param int|string|null $storeId
+     * @return string
+     */
+    public function getTwitterSite(int|string|null $storeId = null): string
+    {
+        return $this->twitterHandle(self::XML_OG_TWITTER_SITE, $storeId);
+    }
+
+    /**
+     * The X (Twitter) account for twitter:creator, as "@handle", or '' when none is set.
+     *
+     * @param int|string|null $storeId
+     * @return string
+     */
+    public function getTwitterCreator(int|string|null $storeId = null): string
+    {
+        return $this->twitterHandle(self::XML_OG_TWITTER_CREATOR, $storeId);
+    }
+
+    /**
+     * Read an X account setting as "@handle".
+     *
+     * Accepts "handle", "@handle" or a profile URL (x.com or twitter.com). Anything that isn't a
+     * valid X username (1-15 letters, digits or underscores) gives '', so no broken tag is output.
+     *
+     * @param string $path
+     * @param int|string|null $storeId
+     * @return string
+     */
+    private function twitterHandle(string $path, int|string|null $storeId): string
+    {
+        $value = trim((string) $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId));
+        $value = (string) preg_replace('#^(?:https?://)?(?:www\.|mobile\.)?(?:x|twitter)\.com/#i', '', $value);
+        $value = ltrim(rtrim($value, '/'), '@');
+
+        return preg_match('/^\w{1,15}$/', $value) ? '@' . $value : '';
     }
 
     /**

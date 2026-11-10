@@ -186,6 +186,14 @@ Configuration,Configuration
 "Output og:title, og:description, og:image, og:type on product and
 category pages.","Output og:title, og:description, og:image, og:type on product and
 category pages."
+"X (Twitter) Account","X (Twitter) Account"
+"The store's X username, e.g. @examplestore, output as twitter:site on every
+page. A profile URL works too. Leave empty for none.","The store's X username, e.g. @examplestore, output as twitter:site on every
+page. A profile URL works too. Leave empty for none."
+"X (Twitter) Creator","X (Twitter) Creator"
+"Output as twitter:creator on every page, e.g. the same account as above.
+Leave empty for none.","Output as twitter:creator on every page, e.g. the same account as above.
+Leave empty for none."
 "Structured Data (JSON-LD)","Structured Data (JSON-LD)"
 "Enable JSON-LD Output","Enable JSON-LD Output"
 "Default Product Schema Template","Default Product Schema Template"

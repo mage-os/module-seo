@@ -8,6 +8,13 @@ hardcoded version field).
 
 ## [Unreleased]
 
+### Added
+
+- **`twitter:site` and `twitter:creator`** ([#52](https://github.com/mage-os/module-seo/issues/52)).
+  Two store-view settings under Open Graph Tags, **X (Twitter) Account** and **X (Twitter)
+  Creator**, output the store's X account on every page. They accept a username or a profile URL;
+  both are empty by default.
+
 ### Fixed
 
 - **`og:description` ignored the meta description on products and categories**

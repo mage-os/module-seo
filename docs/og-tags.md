@@ -114,3 +114,9 @@ return [
 ```
 
 The copies follow the Open Graph tags, so turning off **Enable OG Tags** removes them too.
+
+**The store's X account.** Set **X (Twitter) Account** under Open Graph Tags (store view scope) to
+output `twitter:site` on every page, and **X (Twitter) Creator** for `twitter:creator`. Either
+takes a username (`examplestore` or `@examplestore`) or a profile URL on x.com or twitter.com, and
+is output as `@examplestore`. A value that isn't a valid X username is ignored. Both are empty by
+default, so nothing is output until they are set.

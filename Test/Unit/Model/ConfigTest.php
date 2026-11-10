@@ -154,6 +154,43 @@ class ConfigTest extends TestCase
         ];
     }
 
+    /**
+     * An X account reads as "@handle" from a handle, "@handle" or a profile URL, and '' otherwise.
+     *
+     * @dataProvider twitterHandles
+     * @param string|null $raw
+     * @param string $handle
+     * @return void
+     */
+    #[DataProvider('twitterHandles')]
+    public function testAnXAccountIsAHandle(?string $raw, string $handle): void
+    {
+        foreach (['getTwitterSite' => Config::XML_OG_TWITTER_SITE,
+                     'getTwitterCreator' => Config::XML_OG_TWITTER_CREATOR] as $method => $path) {
+            $values = $raw === null ? [] : [$path => $raw];
+            $this->assertSame($handle, $this->config($values)->$method(self::STORE_ID));
+            $this->assertSame([$path, ScopeInterface::SCOPE_STORE, self::STORE_ID], end($this->reads));
+        }
+    }
+
+    /**
+     * @return array<string,array{0:string|null,1:string}>
+     */
+    public static function twitterHandles(): array
+    {
+        return [
+            'none'            => [null, ''],
+            'empty'           => ['  ', ''],
+            'bare'            => ['examplestore', '@examplestore'],
+            'with @'          => [' @example_store ', '@example_store'],
+            'x.com url'       => ['https://x.com/examplestore/', '@examplestore'],
+            'twitter.com url' => ['http://www.twitter.com/examplestore', '@examplestore'],
+            'too long'        => ['@abcdefghijklmnop', ''],
+            'not a username'  => ['@example store', ''],
+            'other site'      => ['https://instagram.com/examplestore', ''],
+        ];
+    }
+
     public function testTheSitemapGeneratorIsThisModulesOnlyWhenSelected(): void
     {
         $path = Config::XML_SITEMAP_GENERATOR;

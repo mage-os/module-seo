@@ -129,4 +129,30 @@ class SiteMetaProviderTest extends TestCase
 
         $this->assertNotContains('twitter:card', $names);
     }
+
+    public function testEmitsTheXAccountsWhenSet(): void
+    {
+        $this->config->method('isOgTagsEnabled')->willReturn(true);
+        $this->withOrgName('Acme Ltd');
+        $this->config->method('getTwitterSite')->willReturn('@acme');
+        $this->config->method('getTwitterCreator')->willReturn('@acme_team');
+
+        $tags = $this->provider->getMetaTags();
+
+        $this->assertContains(['name' => 'twitter:site', 'content' => '@acme'], $tags);
+        $this->assertContains(['name' => 'twitter:creator', 'content' => '@acme_team'], $tags);
+    }
+
+    public function testOmitsTheXAccountsWhenNotSet(): void
+    {
+        $this->config->method('isOgTagsEnabled')->willReturn(true);
+        $this->withOrgName('Acme Ltd');
+        $this->config->method('getTwitterSite')->willReturn('');
+        $this->config->method('getTwitterCreator')->willReturn('');
+
+        $names = array_column($this->provider->getMetaTags(), 'name');
+
+        $this->assertNotContains('twitter:site', $names);
+        $this->assertNotContains('twitter:creator', $names);
+    }
 }

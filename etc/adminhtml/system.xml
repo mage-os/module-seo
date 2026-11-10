@@ -22,6 +22,24 @@
 category pages.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="twitter_site" translate="label comment" type="text"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>X (Twitter) Account</label>
+                    <comment>The store's X username, e.g. @examplestore, output as twitter:site on every
+page. A profile URL works too. Leave empty for none.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="twitter_creator" translate="label comment" type="text"
+                       sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>X (Twitter) Creator</label>
+                    <comment>Output as twitter:creator on every page, e.g. the same account as above.
+Leave empty for none.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="structured_data" translate="label" type="text" sortOrder="20"
